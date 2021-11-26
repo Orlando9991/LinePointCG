@@ -40,10 +40,11 @@ scene = new THREE.Scene();
 	  
 // camera
 camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
-camera.position.set(0, 0, 10);
+camera.position.set(0, 0, 31);
 	  
 // controls
 controls = new OrbitControls(camera, renderer.domElement);
+controls.enablePan = false;
 }
 	  
 function animate() {
@@ -73,10 +74,10 @@ function CriarPadrao(){
 function DisplayRaster(){
 
 	//20 quadrados em ambas as direções
-	var x=-20;			// x inicial.
-	var y=-20;			// y inicial.
-	var x_f=20;			// x final.
-	var y_f=20;			// y final.
+	var x=-10;			// x inicial.
+	var y=-10;			// y inicial.
+	var x_f=11;			// x final.
+	var y_f=11;			// y final.
 
 	//Vão existir dois tipos de materiais, de forma a poder existir duas cores diferentes.
 	const material1 = new THREE.MeshBasicMaterial( 
@@ -150,8 +151,8 @@ function onMouseMove( event ) {
 	// calculate mouse position in normalized device coordinates
 	// (-1 to +1) for both components
 
-	posicaoRato_2d.x = ( event.clientX / 6 ) * 2 - 1;
-	posicaoRato_2d.y = - ( event.clientY / 3 ) * 2 + 1;
+	posicaoRato_2d.x = ( event.clientX / 21 ) * 2 - 1;
+	posicaoRato_2d.y = - ( event.clientY / 21 ) * 2 + 1;
 	console.log(posicaoRato_2d.x);
 	console.log(posicaoRato_2d.y);
 
