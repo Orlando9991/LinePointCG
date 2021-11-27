@@ -19,3 +19,10 @@ html {
     min-height: 100%;
     margin: 0;
 }
+
+#gui_estilo{
+    position: absolute;
+    top: 5%;
+    left: 5%;
+  }
+  

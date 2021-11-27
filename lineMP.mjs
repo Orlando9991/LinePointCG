@@ -1,258 +1,65 @@
-
 export function lineMP(ponto_i,ponto_f){
-	
+
 	var pontos_linha=[];
-	var distancia_absoluta_X = Math.abs(ponto_f.x-ponto_i.x);
-	var distancia_absoluta_Y = Math.abs(ponto_f.y-ponto_i.y);
-	var distancia_d = 2 * distancia_absoluta_Y - distancia_absoluta_X;
-
-	var incremento_baixo = 2 * distancia_absoluta_Y;
-	var incremento_cima = 2 * (distancia_absoluta_Y - distancia_absoluta_X);
+	var distancia_absoluta_X = Math.abs(ponto_f.x-ponto_i.x);		//Distancia absoluta X
+	var distancia_absoluta_Y = Math.abs(ponto_f.y-ponto_i.y);		//Distancia absoluta Y
 	
-	var x=ponto_i.x;
-	var y=ponto_i.y;
-
+	var distancia_dx  = 2 * distancia_absoluta_Y - distancia_absoluta_X;	//Calcula a distancia do proximo ponto cima/baixo
+	var distancia_dy = 2 * distancia_absoluta_X - distancia_absoluta_Y;		//Calcula a distancia do proximo ponto esquerda/direita
+	
+	var incremento_baixo    = 2 * distancia_absoluta_Y;								//Ponto mais a Sul
+	var incremento_cima     = 2 * (distancia_absoluta_Y - distancia_absoluta_X);	//Ponto mais a Norte
+	var incremento_direita  = 2 * distancia_absoluta_X;								//Ponto mais á direita
+	var incremento_esquerda = 2 * (distancia_absoluta_X - distancia_absoluta_Y);	//Ponto mais á esquerda
+	
+	//Variaveis auxiliares para substituição
+	var incremento_baixo_OU_direita;												
+	var incremento_cima_OU_esquerda;
+	var var1,var2,distancia_pontos,inicial,final,inicial2,final2,distancia_d_aux;
+	
+	//Substituição de variaveis tendo em conta a inclinação da reta
+	if(distancia_absoluta_Y <= distancia_absoluta_X){
+		incremento_baixo_OU_direita = incremento_baixo
+		incremento_cima_OU_esquerda = incremento_cima
+		var1 = inicial  = ponto_i.y
+		var2 = inicial2 = ponto_i.x
+		distancia_pontos = distancia_absoluta_X
+		distancia_d_aux = distancia_dx
+		final = ponto_f.y
+		final2 = ponto_f.x 
+	}
+	else{
+		incremento_baixo_OU_direita = incremento_direita
+		incremento_cima_OU_esquerda = incremento_esquerda
+		var1 = inicial  = ponto_i.x
+		var2 = inicial2 = ponto_i.y
+		distancia_pontos = distancia_absoluta_Y
+		distancia_d_aux = distancia_dy
+		final = ponto_f.x
+		final2 = ponto_f.y
+	}
+	
+	//Ponto inicial
 	pontos_linha.push({
-        x: x,
-        y: y
+        x: ponto_i.x,
+        y: ponto_i.y
     });
-
-	while (x < ponto_f.x){
-		if(distancia_d<=0){
-			distancia_d += incremento_baixo;
-			x++;
-		}
+	
+	//determinação de pontos
+	for (var i=0 ; i<distancia_pontos;i++){
+		if(distancia_d_aux<=0)
+			distancia_d_aux += incremento_baixo_OU_direita;
 		else
 		{
-			distancia_d += incremento_cima;
-			x++;
-			y++;
+			distancia_d_aux += incremento_cima_OU_esquerda;
+			final>=inicial? var1++:var1--;	
 		}
-		pontos_linha.push({
-			x: x,
-			y: y
-		});
+		final2>=inicial2? var2++:var2--;
+			
+		if(distancia_absoluta_Y <= distancia_absoluta_X)
+			pontos_linha.push({x: var2, y: var1});
+		else
+			pontos_linha.push({x: var1, y: var2});
 	}
 	return pontos_linha;
-}
-
-
-
-function DesenhoLinhaPontoMedio(x_inicial, x_final, y_inicial, y_final){
-
-	var distancia_absoluta_X = Math.abs(x_final-x_inicial);
-	var distancia_absoluta_Y = Math.abs(y_final-y_inicial);
-	
-	var distancia_d = 2 * distancia_absoluta_Y - distancia_absoluta_X;
-	var distancia_dy = 2 * distancia_absoluta_X - distancia_absoluta_Y;
-
-	var incremento_baixo = 2 * distancia_absoluta_Y;
-	var incremento_cima = 2 * (distancia_absoluta_Y - distancia_absoluta_X);
-	var incremento_direita = 2 * distancia_absoluta_X;
-	var incremento_esquerda = 2 * (distancia_absoluta_X - distancia_absoluta_Y);
-
-	var x=x_inicial;
-	var y=y_inicial;
-
-	//se for para a esquerda troca-se x inicial por x final
-	
-	scene.add(CriarQuadrado(x,y));
-	if(distancia_absoluta_Y<=distancia_absoluta_X){
-		if(x_final>=x_inicial){
-			while (x < x_final){
-				if(distancia_d<=0)
-					distancia_d += incremento_baixo;
-				else
-				{
-					distancia_d += incremento_cima;
-					y_final>y_inicial?y++:y--;	
-				}
-				x++;
-				quadrante(x_inicial,x_final,y_inicial,y_final,x,y)
-			}
-		}
-		else{
-			while (x > x_final){
-				if(distancia_d<=0)
-					distancia_d += incremento_baixo;
-				else
-				{
-					distancia_d += incremento_cima;
-					y_final>y_inicial?y++:y--;
-				}
-				x--;
-				quadrante(x_inicial,x_final,y_inicial,y_final,x,y)
-			}
-		}
-	}
-	else{
-		if(y_final>y_inicial){
-			while (y < y_final){
-				if(distancia_dy<=0) 
-					distancia_dy += incremento_direita;
-				else
-				{
-					distancia_dy += incremento_esquerda;
-					x_final>=x_inicial?x++:x--;	
-				}
-				y++;
-				quadrante(x_inicial,x_final,y_inicial,y_final,x,y);
-			}
-		}
-		else{
-			while (y > y_final){
-				if(distancia_dy<=0) 
-					distancia_dy += incremento_direita;
-				else
-				{
-					distancia_dy += incremento_esquerda;
-					x_final>=x_inicial?x++:x--;	
-				}
-				y--;
-				quadrante(x_inicial,x_final,y_inicial,y_final,x,y);
-			}
-		}
-	}
-}
-
-function quadrante(xi,xf,yi,yf,x,y){
-	if(xi<=xf){
-		if(yf>=yi)
-			scene.add(CriarQuadrado(x,y)); //N , NE E correto para todas as inclinações
-		else
-			scene.add(CriarQuadrado(x,y-1));	//S, SE 
-	}
-	if(xi>xf){
-		if(yf>=yi)
-			scene.add(CriarQuadrado(x-1,y)); //NO, O  correto para todas as inclinações
-		else
-			scene.add(CriarQuadrado(x-1,y-1));	//SO
-	}
-}
-
-
-
-
-
-
-function DesenhoLinhaPontoMedio(x_inicial, x_final, y_inicial, y_final){
-
-	var distancia_absoluta_X = Math.abs(x_final-x_inicial);
-	var distancia_absoluta_Y = Math.abs(y_final-y_inicial);
-	
-	var distancia_d = 2 * distancia_absoluta_Y - distancia_absoluta_X;
-	var distancia_dy = 2 * distancia_absoluta_X - distancia_absoluta_Y;
-
-	var incremento_baixo = 2 * distancia_absoluta_Y;
-	var incremento_cima = 2 * (distancia_absoluta_Y - distancia_absoluta_X);
-	var incremento_direita = 2 * distancia_absoluta_X;
-	var incremento_esquerda = 2 * (distancia_absoluta_X - distancia_absoluta_Y);
-
-	var incremento_baixo_OU_direita;
-	var incremento_cima_OU_esquerda;
-
-	if(distancia_absoluta_Y<=distancia_absoluta_X){
-		incremento_baixo_OU_direita=incremento_baixo;
-		incremento_cima_OU_esquerda=incremento_cima;
-	}
-	else{
-		incremento_baixo_OU_direita=incremento_direita;
-		incremento_cima_OU_esquerda=incremento_esquerda;
-	}
-
-	var inc1;
-	var inc2;
-
-	if(x_final>=x_inicial){
-		x++;
-	}
-	else{
-		x--;
-	}
-
-	if(y_final>y_inicial){
-
-	}
-	else{
-
-	}
-
-	var x=x_inicial;
-	var y=y_inicial;
-	for(xxxxxx)
-
-	//se for para a esquerda troca-se x inicial por x final
-	
-	scene.add(CriarQuadrado(x,y));
-	if(distancia_absoluta_Y<=distancia_absoluta_X){
-		if(x_final>=x_inicial){
-			while (x < x_final){
-				if(distancia_d<=0)
-					distancia_d += incremento_baixo;
-				else
-				{
-					distancia_d += incremento_cima;
-					y_final>y_inicial?y++:y--;	
-				}
-				x++;
-				quadrante(x_inicial,x_final,y_inicial,y_final,x,y)
-			}
-		}
-		else{
-			while (x > x_final){
-				if(distancia_d<=0)
-					distancia_d += incremento_baixo;
-				else
-				{
-					distancia_d += incremento_cima;
-					y_final>y_inicial?y++:y--;
-				}
-				x--;
-				quadrante(x_inicial,x_final,y_inicial,y_final,x,y)
-			}
-		}
-	}
-	else{
-		if(y_final>y_inicial){
-			while (y < y_final){
-				if(distancia_dy<=0) 
-					distancia_dy += incremento_direita;
-				else
-				{
-					distancia_dy += incremento_esquerda;
-					x_final>=x_inicial?x++:x--;	
-				}
-				y++;
-				quadrante(x_inicial,x_final,y_inicial,y_final,x,y);
-			}
-		}
-		else{
-			while (y > y_final){
-				if(distancia_dy<=0) 
-					distancia_dy += incremento_direita;
-				else
-				{
-					distancia_dy += incremento_esquerda;
-					x_final>=x_inicial?x++:x--;	
-				}
-				y--;
-				quadrante(x_inicial,x_final,y_inicial,y_final,x,y);
-			}
-		}
-	}
-}
-
-function quadrante(xi,xf,yi,yf,x,y){
-	if(xi<=xf){
-		if(yf>=yi)
-			scene.add(CriarQuadrado(x,y)); //N , NE E correto para todas as inclinações
-		else
-			scene.add(CriarQuadrado(x,y-1));	//S, SE 
-	}
-	if(xi>xf){
-		if(yf>=yi)
-			scene.add(CriarQuadrado(x-1,y)); //NO, O  correto para todas as inclinações
-		else
-			scene.add(CriarQuadrado(x-1,y-1));	//SO
-	}
 }

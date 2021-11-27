@@ -1,24 +1,20 @@
 import * as THREE from 'https://unpkg.com/three@0.124.0/build/three.module.js';
 import { OrbitControls } from 'https://unpkg.com/three@0.124.0/examples/jsm/controls/OrbitControls.js'
-
+import { GUI } from 'https://unpkg.com/three@0.124.0/examples/jsm/libs/dat.gui.module'
+import {lineMP}	from '../../lineMP.mjs'
 
 var renderer, scene, controls;
 
 const raycaster = new THREE.Raycaster();
 const posicaoRato_2d = new THREE.Vector2();
-import {lineMP}	from '../../lineMP.mjs'
-let P = {x: 0, y: 0}; let Q = {x: 3, y: 1};
-			let R= lineMP(P,Q);
-			console.log(R); // imprime [{x: 0, y: 0}, {x: 1, y: 0}, {x: 2, y: 1}, {x: 3, y: 1}
-			//Coloca uma mensagem na pagina
-			prompt(R);
+
 
 //Camera
 var camera;
-const fov = 40; 										  // fov - field of view. 75 graus em dimensão vertical. Angulo de visão em V
-const aspect =  window.outerWidth / window.outerHeight;   // Tamanho da janela
+const fov = 75; 										  // fov - field of view. 75 graus em dimensão vertical. Angulo de visão em V
+const aspect =  window.innerWidth / window.innerHeight;   // Tamanho da janela
 const near = 1;											  // Tudo o que vai ser apresentado perto
-const far = 10000; 										  // Tudo o que vai ser apresentado longe
+const far = 350; 										  // Tudo o que vai ser apresentado longe
 			
 
 init();
@@ -30,9 +26,9 @@ function init() {
 			  
 // renderer
 renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.outerWidth, window.outerHeight);
+renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setClearColor(new THREE.Color(1,1,0.9));					//Adicionar Cor de fundo
-//renderer.setPixelRatio(window.devicePixelRatio);
+renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 	  
 // scene
@@ -40,11 +36,13 @@ scene = new THREE.Scene();
 	  
 // camera
 camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
-camera.position.set(0, 0, 31);
+camera.position.set(0, 0, 14);
 	  
 // controls
 controls = new OrbitControls(camera, renderer.domElement);
 controls.enablePan = false;
+
+Recentrar();
 }
 	  
 function animate() {
@@ -179,3 +177,25 @@ function render() {
 window.addEventListener( 'mousemove', onMouseMove, false );
 
 window.requestAnimationFrame(render);
+
+function recentrar() {
+	controls.reset();
+}
+
+function Recentrar(){
+	
+	var gui = new GUI ({ autoPlace: false });
+	gui.domElement.id = 'gui';
+	gui_estilo.appendChild(gui.domElement);
+
+	var parametros = {
+		Centrar: recentrar
+	};
+	
+	//var folder = gui.addFolder('My folder');
+	
+	gui.add(parametros, 'Centrar');
+	
+	gui.open();
+
+}
