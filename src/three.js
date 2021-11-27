@@ -14,7 +14,7 @@ var camera;
 const fov = 75; 										  // fov - field of view. 75 graus em dimensão vertical. Angulo de visão em V
 const aspect =  window.innerWidth / window.innerHeight;   // Tamanho da janela
 const near = 1;											  // Tudo o que vai ser apresentado perto
-const far = 350; 										  // Tudo o que vai ser apresentado longe
+const far = 1000; 										  // Tudo o que vai ser apresentado longe
 			
 
 init();
@@ -107,6 +107,8 @@ function DisplayRaster(){
 			//Cria o pixel atribuindo o material e posição. 
 			const pixel = new THREE.Mesh( geometria_pixel, mat);
 			pixel.position.set(x_aux,y_aux,0);
+			pixel.name="Pixel";
+
 			scene.add(pixel);
 
 			//alternando em no eixo X o material de forma a obter um xadrez.
@@ -149,11 +151,10 @@ function onMouseMove( event ) {
 	// calculate mouse position in normalized device coordinates
 	// (-1 to +1) for both components
 
-	posicaoRato_2d.x = ( event.clientX / 21 ) * 2 - 1;
-	posicaoRato_2d.y = - ( event.clientY / 21 ) * 2 + 1;
-	console.log(posicaoRato_2d.x);
-	console.log(posicaoRato_2d.y);
-
+	posicaoRato_2d.x =   (event.clientX / renderer.domElement.clientWidth) * 2 - 1,
+	posicaoRato_2d.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1,
+	//console.log("x:",posicaoRato_2d.x,"  y:",posicaoRato_2d.y);
+	render();
 }
 
 function render() {
@@ -161,22 +162,23 @@ function render() {
 	// update the picking ray with the camera and mouse position
 	raycaster.setFromCamera( posicaoRato_2d, camera );
 
-	// calculate objects intersecting the picking ray
-	const intersects = raycaster.intersectObjects( scene.children );
+	//3. compute intersections
+	var intersects = raycaster.intersectObjects(scene.children);
 
-	for ( let i = 0; i < intersects.length; i ++ ) {
-
-		intersects[ i ].object.material.color.set( 0xff0000 );
-
+	for (var i = 0; i < intersects.length; i++) {
+	   console.log(intersects[i].name);
+	   let obj = intersects[i];
+	   //scene.remove(scene.children[i]);                                                                        //removendo os objetos desnecessários
+        if(obj.object.name === "Pixel"){
+			console.log("x:",obj.object.position.x,"  y:",obj.object.position.y)
+                //scene.remove(scene.children[i]); 
+		}   
 	}
-
 	renderer.render( scene, camera );
-
 }
 
 window.addEventListener( 'mousemove', onMouseMove, false );
 
-window.requestAnimationFrame(render);
 
 function recentrar() {
 	controls.reset();
@@ -186,8 +188,9 @@ function Recentrar(){
 	
 	var gui = new GUI ({ autoPlace: false });
 	gui.domElement.id = 'gui';
-	gui_estilo.appendChild(gui.domElement);
+	gui_estilo.appendChild(gui.domElement);	
 
+	//Criar "botão" para centralizar o plano
 	var parametros = {
 		Centrar: recentrar
 	};
@@ -195,7 +198,15 @@ function Recentrar(){
 	//var folder = gui.addFolder('My folder');
 	
 	gui.add(parametros, 'Centrar');
-	
 	gui.open();
+}
 
+//Redimensionar a janela
+window.addEventListener('resize', onWindowResize, false)
+
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight
+    camera.updateProjectionMatrix()
+    renderer.setSize(window.innerWidth, window.innerHeight)
+    render()
 }
