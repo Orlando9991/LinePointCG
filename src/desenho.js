@@ -25,12 +25,11 @@ animate();
 
 //#################   Iniciar Three   ####################
 
-function init() {
-			  
+function init() {		  
 // render
-renderer = new THREE.WebGLRenderer();
+renderer = new THREE.WebGLRenderer();								
 renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setClearColor(new THREE.Color(1,1,0.7));					//Adicionar Cor de fundo
+renderer.setClearColor(new THREE.Color(1,1,0.7));
 renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 	  
@@ -51,7 +50,6 @@ Opcoes();
 	  
 function animate() {
 	requestAnimationFrame(animate);
-	//controls.update();
 	renderer.render(scene, camera);
 }
 
@@ -59,10 +57,10 @@ function animate() {
 
 function CriarPadrao(){
 				
-	// ambient
+	// Ambiente
 	scene.add(new THREE.AmbientLight(0x222222));
 
-	// light
+	// luz
 	var light = new THREE.DirectionalLight(0xffffff, 1);
 	light.position.set(0, 0, 10);
 	scene.add(light);
@@ -70,7 +68,7 @@ function CriarPadrao(){
 	//Criar Display Raster;
 	DisplayRaster();
 	  
-	// eixos
+	// Eixos
 	eixos();
 }
 
@@ -121,7 +119,6 @@ function DisplayRaster(){
 		}
 	  }
 }
-
 
 function eixos(){
 	
@@ -287,7 +284,6 @@ function CriarLinha(x_inicial, x_final, y_inicial, y_final){
 
 	scene.add(linha);																//Adiciona à cena
 }
-
 
 function Opcoes(){
 	
