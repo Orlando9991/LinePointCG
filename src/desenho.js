@@ -20,12 +20,13 @@ const near = 1;											  // Tudo o que vai ser apresentado perto
 const far = 1000; 										  // Tudo o que vai ser apresentado longe
 			
 init();
-CriarPadrao();
+CriarDisplay();
 animate();
 
 //#################   Iniciar Three   ####################
 
-function init() {		  
+function init() {
+			  
 // render
 renderer = new THREE.WebGLRenderer();								
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -55,7 +56,7 @@ function animate() {
 
 //#################   Plano / Eixos   ####################
 
-function CriarPadrao(){
+function CriarDisplay(){
 				
 	// Ambiente
 	scene.add(new THREE.AmbientLight(0x222222));
@@ -127,11 +128,11 @@ function eixos(){
 	
 	const pontosX = [];															
 	pontosX.push( new THREE.Vector3( 0, 0, 0 ) );								//pontos em X
-	pontosX.push( new THREE.Vector3( 10+(1/2), 0, 0 ) );
+	pontosX.push( new THREE.Vector3( 21/2, 0, 0 ) );
 
 	const pontosY = [];
 	pontosY.push( new THREE.Vector3( 0, 0, 0 ) );								//pontos em Y
-	pontosY.push( new THREE.Vector3( 0, 10+(1/2), 0 ) );
+	pontosY.push( new THREE.Vector3( 0, 21/2, 0 ) );
 	
 	const geometria_X = new THREE.BufferGeometry().setFromPoints( pontosX );	//Criar geometria
 	const geometria_Y = new THREE.BufferGeometry().setFromPoints( pontosY );	//tendo em conta os pontos anteriores
